@@ -35,12 +35,6 @@ Scripts that measure surface roughness include:
 
 There are also smaller dependency functions not described herein. I also developed a Discrete Fourier Transform function which, due to the slowness of performance, I ceased using and will include but have not supported since early October 2019. 
 
-** Examples ***
-A digital elevation model of the area around Snowbasin Ski Area.
-![alt text](address to figure)
-
-A surface roughness model of the same area
-![alt text](adderss to figure)
 **Inputs**
 
 All functions take .tif files exported from a GIS software. Importantly, these should be square or rectangular clipped pieces of a Digital Elevation Model. DEM must be **projected in UTM**.
