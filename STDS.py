@@ -48,7 +48,7 @@ def STDS(DEM, w, cellsize):
     [nrows, ncols] = np.shape(DEM)
     nw = (w*2+1)**2
 
-    
+    # Main loop going through the SLOPE grid and calculating the standard deviation.
     for i in nb.prange(w,nrows-w):
         for j in range(w,ncols-w):
             d1 = np.arange(i-w,i+w)
