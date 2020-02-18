@@ -33,6 +33,11 @@ Scripts that measure surface roughness include:
 * `conv2_mexh_var.py` and `conv2_mexh2.py` - continuous wavelet transform
 * `DCE_preprocess.py` and `DCE_eig_par.py` - Directional cosine eigen vector
 
+For a guided coding experience, I recommend you start with:
+* `Snow_basin_Roughness_Maps.py` - which will guide you through all of the aforementioned functions.
+* `Snow_basin_landslide_maps.py` - which will guide you through the deterministic solution to mapping landslides in a semi-automated fashion.
+
+
 There are also smaller dependency functions not described herein. I also developed a Discrete Fourier Transform function which, due to the slowness of performance, I ceased using and will include but have not supported since early October 2019. 
 
 ** Examples **
