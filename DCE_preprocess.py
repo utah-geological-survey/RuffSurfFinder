@@ -6,15 +6,24 @@ DCE Preprocess, gets all of the inputs needed for the optimized DC_Eig_par funct
 This separate script was written as several of the function calls herein are not supported by Numba, which was used to parallelize the secondary function (DC_eig_par.py).
 
 INPUT: 
-    DEM, cellsize, w,
+    DEM - digital elevation model;
+    cellsize - grid resolution
+    w - size of moving window
     
 OUTPUT:
     cy
     cx
     cz
+        Directional cosine(s) calculated in the x, y, and z directions
+    
+EXAMPLES:
+    w = 20
+    cellsize = 0.5
+    [cx,cy,cz] = DCE_preprocess(DEM,cellsize,w)
     
 REFERENCES:
     McKean and Roering, 2004, Objective landslide detection and surface morphology mapping using high-resolution airborne laser altimetry, Geomorphology, v. 57, no. 3-4, 331 - 351.
+    
 @author: matthewmorriss
 """
 import numpy as np
