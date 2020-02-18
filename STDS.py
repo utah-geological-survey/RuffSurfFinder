@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Oct 29 16:32:17 2019
-This is a function to calculate the standard deviation of slope (in parallel). Code modifeid from Matteo Berti (see github page for full reference). This code was written to take advantage of Numba's ability to process in parallel, vastly increasing the efficiency of the code.
+This is a function to calculate the standard deviation of slope (in parallel). Code modified from Matteo Berti (see github page for full reference). This code was written to take advantage of Numba's ability to process in parallel, vastly increasing the efficiency of the code.
 
 INPUTS:
     DEM - a square shaped digital elevation model imported into python
@@ -11,12 +11,15 @@ INPUTS:
 OUTPUTS:
     stdsGrid - the grid of calculated standard deviation of slopes.
     
+References:
+    Frankel and Dolan, 2007, Characterizing arid region alluvial fan surface roughness with airborne laser swath mapping digital topographic data, Journal of Geophysical Research, V. 112, F2, PF02025.
 @author: Matthew Morriss
 """
 import numpy.core
 import numpy as np
 import numba as nb
 
+# This is the first step of the function, calculating a slope grid across the DEM, this step is parallelized using Numba.
 @nb.njit(parallel=True)
 def Slope_grd(DEM, w, cellsize):
     slope = np.nan * DEM
@@ -36,7 +39,7 @@ def Slope_grd(DEM, w, cellsize):
             
     return(slope)
     
-    
+#Main function for this code. Calls the Slope_grd function and then uses a moving window across the slope grid to calculate the standard deviation of slope. 
 @nb.njit(parallel=True)
 def STDS(DEM, w, cellsize):
     
