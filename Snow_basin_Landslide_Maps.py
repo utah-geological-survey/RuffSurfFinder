@@ -112,7 +112,7 @@ lsRaster = np.float64(lsRaster)
 lsRaster[np.isnan(lsRaster)] = 0 #should now be a map of 1s and 0s
 #%% Plot the overlaid boolean array over the hillshade of the DEM
 # this is an important step to be sure your boolean array is of the correct dimensions.
-from hillshade import hillshade
+
 hs_array = hillshade(DEM)
 
 fig = plt.figure()
@@ -125,7 +125,7 @@ ax.plot()
 # This test requires patches of both the landslide and non-landslide to compare the power spectra between the two pieces of the landscape.
 
 # This methodology follows Booth et al., (2009).
-#### IMPORTANTLY!!! #### EACH TEST PATCH MUST BE CLIPPED SQUARE!
+#### IMPORTANTLY!!! #### EACH TEST PATCH MUST BE CLIPPED SQUARE or in a rectangle!
 #This code is heavily adapted from code available here: http://web.pdx.edu/~boothad/tools.html
 # It was originally writen in Matlab, but I have now adapted it for Python.
 
@@ -201,11 +201,9 @@ ax2.set_xlabel('Frequency (m$^{-1}$)')
 ax2.xaxis.set_major_formatter(FormatStrFormatter("%.2f"))
 ax2.set_title('Normalized Wavelet Spectra')
 
-"""If you follow the logic of the full width at half maximum wavelength logic laid out by Booth et al., 2009, the result would be the wavelengths of 12-50 m are ideal for detecting the spectral character of landslides. I will also test a series of other wavelength bands: 18 - 25 and 8 - 14 m bands as well """
+"""If you follow the logic of the full width at half maximum wavelength logic laid out by Booth et al., 2009, the result would be the wavelengths of 12-50 m are ideal for detecting the spectral character of landslides. I will also test a series of other wavelength bands: 18 - 25 and 8 - 14 m bands as well. Several sections lower there is a place for running a combined ROC plot. """
 
-#%% CWT for 14-46 M
-"""UNCOMMENT CODE BELOW TO SEE THE WIDER SPECTRUM RESULTS"""
-
+#%% TEST 1A FOR CWT
 ###################################################
 ###################################################
 ##### THIS CORRESPONDS TO 12 - 50 M ROUGHNESS ####
@@ -253,7 +251,7 @@ current_cmap.set_bad('black',1.)
 
 ax2 = plt.imshow(np.log(Vcwt_smooth),cmap = current_cmap)
 ax2.set_array(masked_array)
-ax2.set_title('CWT Power Sum (smoothed)')
+
 
 
 
@@ -261,6 +259,7 @@ ax2.set_title('CWT Power Sum (smoothed)')
 lowT = 2        #LOW THRESHOLD
 highT = 11      #HIGH THRESHOLD
 numDiv = 40     #NUM OF DIVISIONS
+lsMap = np.float32(np.log(Vcwt_smooth))
 [fpr,tpr, lsMap, tmax] = ROC_plot(lsMap,lsRaster,lowT,highT,numDiv)
 
 auc = np.trapz(tpr,fpr)
@@ -276,9 +275,9 @@ with rio.open(fName,'w',**Meta) as dst:
     dst.write(lsMap,1)
 
 #%% clean up workspace
-del(Vcwtsum, Vcwt_smooth,demFLD, demUNfld,masked_array,wave, ax1,ax2,fig1,fig2,frq,radius)
+del(Vcwtsum, Vcwt_smooth,masked_array, ax1,ax2,fig1,fig2,frq,radius)
 
-#%% CWT WITH A NARROWER AND SHORTER
+#%% TEST 1B OF CWT
 ###################################################
 ###################################################
 ##### THIS CORRESPONDS TO 14 - 8 M ROUGHNESS ####
@@ -296,15 +295,13 @@ Vcwtsum = C2**2 + C3**2 + C4**2
 del(C2,C3,C4)
 
 fig1, ax1= plt.subplots()
-plt.imshow(np.log(Vcwtsum)) 
-ax1.set_title('CWT Spectral Power Sum')
+ax1.imshow(np.log(Vcwtsum)) 
 
 radius = 25
 from smooth2 import smooth2
 [Vcwt_smooth,_] = smooth2(Vcwtsum,radius)
 
-fig2, ax2 = plt.imshow()
-ax2.set_title('CWT Power Sum (smoothed)')
+fig2, ax2 = plt.subplots()
 ax2.imshow(np.log(Vcwt_smooth))
 
     
@@ -313,6 +310,7 @@ ax2.imshow(np.log(Vcwt_smooth))
 lowT = -2       #LOW THRESHOLD
 highT = 5       #HIGH THRESHOLD
 numDiv = 40     #NUM OF DIVISIONS
+lsMap = np.float32(np.log(Vcwt_smooth))
 [fpr,tpr, lsMap, tmax] = ROC_plot(lsMap,lsRaster,lowT,highT,numDiv)
 
 
@@ -329,9 +327,9 @@ with rio.open(fName,'w',**Meta) as dst:
     dst.write(lsMap,1)
 
 #%% clean up workspace
-del(Vcwtsum, Vcwt_smooth,demFLD, demUNfld,masked_array,wave, ax1,ax2,fig1,fig2,frq,radius)
+del(Vcwtsum, Vcwt_smooth,masked_array, ax1,ax2,fig1,fig2,frq,radius)
 
-#%% CWT WITH A SLIGHTLY DIFFERENT WAVELENGTH
+#%% TEST 1C OF CWT
 ###################################################
 ###################################################
 ##### THIS CORRESPONDS TO 18 - 25 M ROUGHNESS ####
@@ -358,7 +356,7 @@ radius = 25
 from smooth2 import smooth2
 [Vcwt_smooth,_] = smooth2(Vcwtsum,radius)
 
-fig2, ax2 = plt.imshow()
+fig2, ax2 = plt.subplots()
 ax2.set_title('CWT Power Sum (smoothed)')
 ax2.imshow(np.log(Vcwt_smooth))
 
@@ -367,6 +365,7 @@ ax2.imshow(np.log(Vcwt_smooth))
 lowT = 0        #LOW THRESHOLD
 highT = 8.1     #HIGH THRESHOLD
 numDiv = 40     #NUMBER OF DIVISIONS
+lsMap = np.float32(np.log(Vcwt_smooth))
 [fpr,tpr, lsMap, tmax] = ROC_plot(lsMap,lsRaster,lowT,highT,numDiv)
 
 auc = np.trapz(tpr,fpr)
@@ -383,7 +382,7 @@ with rio.open(fName,'w',**Meta) as dst:
     dst.write(lsMap,1)
 
 #%% clean up workspace
-del(Vcwtsum, Vcwt_smooth,demFLD, demUNfld,masked_array,wave, ax1,ax2,fig1,fig2,frq,radius)
+del(Vcwtsum, Vcwt_smooth, ax1,ax2,fig1,fig2,radius)
 
 
 #%% Plot all ROCS for CWT
@@ -413,9 +412,9 @@ figName = 'CWT_ROC_curve.pdf'
 plt.savefig(figName)
 
 #%% clean up workspace
-del(fig, ax, zz, DF, winds)
-
-#%% ####### TEST OF STANDARD DEVIATION OF SLOPE ######
+del(fig, ax, zz, DF, winds, Vcwt_fld, Vcwt_norm, Vcwt_unfld,aucL, fprL, tprL, tMaxL, auc, tpr, lowT, highT, numDiv)
+o
+#%% TEST 2 STANDARD DEVIATION OF SLOPE
 """"Below is the test of the standard deviation of slope, which requires a window size and then calls the STDS function. This method is developed out of the testing of Berti et al., 2013, which cites Frankel and Dolan 2007.
 
 This function will be run over a series of window sizes (5 -35). The experiments with different window sizes are conducted within a For loop for simplicity and then the ROC plot is generated.
@@ -485,10 +484,15 @@ ax.set_ylabel('True Positive Rate')
 figName = 'STDS_ROC_Curves.pdf'
 plt.savefig(figName)
 
-#%% ####### TEST OF RMSH roughness ######
+
+#%% clean up workspace
+del(fig, fpr, fprL, highT, lowT, numDiv, i, auc, aucL, radius, zz, DF, ax,stdGrd, tMaxL, tmax, tpr, tprL)
+#%% TEST 3 ROOT MEAN SQUARED HEIGHT
 """This is a test of the root meant squared height method of measuring surface roughness. This method is developed from code written by Berti et al., 2013 which built on the methods described in Shepard et al,. 2001. This code will generate a landslide map by comparing the surface roughness map to the roughness of the a priori mapped landslides.
 
-The RMSH will be calculated on windows between 5 and 35 at increments of 5."""
+The RMSH will be calculated on windows between 5 and 35 at increments of 5.
+
+This will take about ~1 hour  to run on a fast machine with ~8 cores."""
 
 fprL = []
 tprL = []
@@ -545,57 +549,22 @@ for i in np.arange(0,len(tprL)):
     lab = 'Window = ' + str(wL[i]) + 'm' + ' AUC = ' + str(round(aucL[i],2))
     ax.plot(fprL[i],tprL[i],label = lab)
     ax.legend()
-fig.suptitle('STDS windowed experiments, ROC')
+fig.suptitle('RMSH windowed experiments, ROC')
 ax.set_xlabel('False Positive Rate')
 ax.set_ylabel('True Positive Rate')
 
+#Save compiled plots
 figName = 'RMHS_ROC_Curves.pdf'
 plt.savefig(figName)
 
-#%%
+#%% clean up workspace
+del(fig, fpr, fprL, highT, lowT, numDiv, i, auc, aucL, zz, DF, ax,stdGrd, tMaxL, tmax, tpr, tprL)
 
 
+#%% TEST 4 DIRECTIONAL COSINE EIGENVECTOR
+""""This is a test of the directional cosine eigen vector method of measuring surface roughness. This method was first described in McKean and Roering (2004). The resulting grids are best visualized in ArcGIS.
 
-
-
-
-#%%
-#%% Plot all ROCS for CWT
-winds = ["12-50 m", "18 - 25 m","7 - 13 m"]
-zz = np.vstack([np.asarray(aucL), np.asarray(tMaxL),winds])
-zz = zz.T
-import pandas as pd
-
-DF = pd.DataFrame(zz)
-DF.columns = ['AUC','Rc','window size']
-DF.to_excel('windowSize_CWT.xlsx',header = True,index = False)
-
-
-# Plot resulting ROC curves
-fig = plt.figure()
-ax = fig.add_subplot(1,1,1)
-#colours=['r','g','b','k']
-for i in np.arange(0,len(tprL)):
-    lab = 'Window = ' + winds[i] + ' ' + ' AUC = ' + str(round(aucL[i],2))
-    ax.plot(fprL[i],tprL[i],label = lab)
-    ax.legend()
-fig.suptitle('STDS windowed experiments, ROC')
-ax.set_xlabel('False Positive Rate')
-ax.set_ylabel('True Positive Rate')
-
-figName = 'CWT_ROC_curve.pdf'
-plt.savefig(figName)
-
-#%% DCE EIGEN ROC
-
-# window sizes = 5, 10, 15, 20
-os.chdir(r'U:\GHP\Projects\NSF - Morris Landslides\Code\Developmemnt\wavelets')
-from ROC_plot import ROC_plot
-from DC_eig_par import DC_eig_par
-from DCE_preprocess import DCE_preprocess
-import progress as progress
-
-os.chdir(r'U:\GHP\Projects\NSF - Morris Landslides\Code\Developmemnt\testing_ls_map')
+The DCE will be calculated across windows 10 to 45 in increments of 5."""
 
 fprL = []
 tprL = []
@@ -604,27 +573,29 @@ tMaxL = []
 aucL = []
 wL = []
 
-maxW = 40
-minW = 10
-inc = 5
+maxW = 20       #maximum window size
+minW = 10       #minimum window size
+inc = 5         #increment size
 
 for i in range(minW,maxW,inc):
-    print(i)
-    print()
+
+    #preprocess DEM to calculate directional cosine grids
     [cx,cy,cz] = DCE_preprocess(DEM,cellsize,i)
+    
+    #calculate eps, machine relative error.
     eps = np.finfo(float).eps
     eps = np.float32(eps)
+    
+    #CALCULATE DIRECTIONAL COSINE EIGENVECTOR
     eigGrd = DC_eig_par(DEM, i,cx,cy,cz,eps)
-    fName = 'DCE_w' + str(i) + '.tif'
-    eigGrd = np.float32(eigGrd)
-    with rio.open(fName,'w',**Meta) as dst:
-        dst.write(eigGrd,1)
-        
-    lowT = 0
-    highT = 1
-    numDiv = 70
+    
+    # PLOT ROC CURVE
+    lowT = 0        #MAXIMUM THRESHOLD
+    highT = 1       #MINIMUM THRESHOLD
+    numDiv = 70     #NUMBER OF DIVISIONS
     [fpr,tpr, lsMap, tmax] = ROC_plot(eigGrd,lsRaster,lowT,highT,numDiv)
     
+    #SAVE RESULTS FROM ROC
     auc = np.trapz(tpr,fpr)
     fprL.append(fpr) #save outputs for false positive rate
     tprL.append(tpr) # save outputs for true positive rate
@@ -632,18 +603,20 @@ for i in range(minW,maxW,inc):
     aucL.append(auc) # save outputs for area under curve
     wL.append(i) # save window size outputs
 
+    #PLOT ROC
     plt.plot(fpr,tpr)
     
+    #EXPORT LANDSLIDE MAP FOR THIS ROC DERIVED THRESHOLD
     fName = 'DCE_w' + str(i) + '_lsMap.tif'
     lsMap = np.float32(lsMap)
     with rio.open(fName,'w',**Meta) as dst:
         dst.write(lsMap,1)
 
+#COALATE ALL ROC RESULTS INTO A SINGLE TABLE
 zz = np.vstack([np.asarray(wL), np.asarray(aucL), np.asarray(tMaxL)])
 zz = zz.T
-import pandas as pd
 
-os.chdir(r'U:\GHP\Projects\NSF - Morris Landslides\Code\Developmemnt\testing_roughness_map_sb')
+#EXPORT RESULTS FROM ROC TO EXCEL FILE
 DF = pd.DataFrame(zz)
 DF.columns = ['Window', 'AUC','Rc']
 DF.to_excel('windowSize_DCE.xlsx',header = True,index = False)
@@ -660,5 +633,6 @@ fig.suptitle('DCE windowed experiments, ROC')
 ax.set_xlabel('False Positive Rate')
 ax.set_ylabel('True Positive Rate')
 
+#SAVE RESULTING COMPILED ROC CURVE
 figName = 'DCE_ROC_Curves.pdf'
 plt.savefig(figName)
