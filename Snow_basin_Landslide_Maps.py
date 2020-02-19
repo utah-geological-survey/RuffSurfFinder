@@ -573,7 +573,7 @@ tMaxL = []
 aucL = []
 wL = []
 
-maxW = 20       #maximum window size
+maxW = 45       #maximum window size
 minW = 10       #minimum window size
 inc = 5         #increment size
 
