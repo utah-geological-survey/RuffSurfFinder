@@ -37,7 +37,7 @@ For a guided coding experience, I recommend you start with:
 * `Snow_basin_Roughness_Maps.py` - which will guide you through all of the aforementioned functions.
 * `Snow_basin_landslide_maps.py` - which will guide you through the deterministic solution to mapping landslides in a semi-automated fashion.
 
-Main DEM input file is located [here](https://github.com/utah-geological-survey/RuffSurfFinder/releases/download/v1.0.1/sb_less_steep.tif). This should link to a `.tif` file for the Snowbasin Ski Area landslides. This is the practice DEM for which the two guides above are written to work with.
+**Main DEM input file** is located **[here]**(https://github.com/utah-geological-survey/RuffSurfFinder/releases/download/v1.0.1/sb_less_steep.tif). This should link to a `.tif` file for the Snowbasin Ski Area landslides. This is the practice DEM for which the two guides above are written to work with.
 
 There are also smaller dependency functions not described herein. I also developed a Discrete Fourier Transform function which, due to the slowness of performance, I ceased using and will include but have not supported since early October 2019. 
 
