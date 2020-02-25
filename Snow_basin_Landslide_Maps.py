@@ -22,6 +22,8 @@ INPUTS:
    ##### IMPORTANTLY!!##### ALL INPUT FILES ARE EXPORTED FROM ARCGIS IN UTM COORDS
     
     1) sb_less_steep.tif -- This is a 2 m resolution DEM of the SBROI. 
+PLEASE NOTE THAT THIS FILE IS STORED IN THE RELEASES PART OF THE GITHUB PAGE
+
     2) ls_patch_4.tif -- A small piece of a landslide in the SBROI
     3) no_ls_patch4.tif -- A small piece of non-landslide terrain in the SBROI.
     4) ls_boolean_map_match.tif -- a map of 0s and 1s, with the same dimensions as the original DEM (sb_less_steep.tif) 
