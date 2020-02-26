@@ -5,7 +5,7 @@ This function is based on code developed by Matteo Berti. It was subsequently he
 
 INPUTS:
     DEM - a square shaped digital elevation model imported into python
-    w - window size over which the STDS will be calculated
+    w - window size over which the RMSH will be calculated
 
     
 OUTPUTS:
