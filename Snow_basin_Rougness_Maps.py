@@ -20,7 +20,7 @@ DEFINITIONS:
 INPUTS:
    ##### IMPORTANTLY!!##### ALL INPUT FILES ARE EXPORTED FROM ARCGIS IN UTM COORDS
     
-    1) sb_less_steep.tif -- This is a 2 m resolution DEM of the SBROI. 
+    1) ls_patch_4.tif -- This is a 2 m resolution DEM from the SBROI. I chose a small file and smaller area for the sake of efficiency and computation time.
     PLEASE NOTE THAT THIS FILE IS STORED IN THE RELEASES PART OF THE GITHUB PAGE
     
     2) ls_patch_4.tif -- A small piece of a landslide in the SBROI
@@ -81,7 +81,7 @@ from DCE_preprocess import DCE_preprocess
 
 
 
-lspatch = 'sb_less_steep.tif' # <------ INPUT FILE NAME <------
+lspatch = 'ls_patch_4.tif' # <------ INPUT FILE NAME <------
 
 #manually set the dx or cell size, uncomment if you want otherwise it will be detected by Gdal
 # cellsize = 0.5 #<-------
