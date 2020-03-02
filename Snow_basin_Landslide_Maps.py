@@ -21,12 +21,11 @@ DEFINITIONS:
 INPUTS:
    ##### IMPORTANTLY!!##### ALL INPUT FILES ARE EXPORTED FROM ARCGIS IN UTM COORDS
     
-    1) sb_less_steep.tif -- This is a 2 m resolution DEM of the SBROI. 
-PLEASE NOTE THAT THIS FILE IS STORED IN THE RELEASES PART OF THE GITHUB PAGE
+    1) ls_patch_4.tif -- This is a 2 m resolution DEM of the SBROI. I use this piece twice for computational efficiency. However, you could sub in the sb_less_steep.tif file in the releases portion of the GitHub page. 
 
     2) ls_patch_4.tif -- A small piece of a landslide in the SBROI
     3) no_ls_patch4.tif -- A small piece of non-landslide terrain in the SBROI.
-    4) ls_boolean_map_match.tif -- a map of 0s and 1s, with the same dimensions as the original DEM (sb_less_steep.tif) 
+    4) p4_bool_prop.tif -- a map of 0s and 1s, with the same dimensions as the original DEM (sb_less_steep.tif) 
     
 OUTPUTS:
     ROC Curve - for each method a figure that has a curve plotted for each window size tested
@@ -84,8 +83,8 @@ from DC_eig_par import DC_eig_par
 from DCE_preprocess import DCE_preprocess
 from ROC_plot import ROC_plot
 
-lspatch = 'sb_less_steep.tif' # <------ INPUT FILE NAME <------
-boolPatch = 'ls_boolean_map_match.tif' #<------Input boolean file name 
+lspatch = 'ls_patch_4.tif' # <------ INPUT FILE NAME <------
+boolPatch = 'p4_bool_prop.tif' #<------Input boolean file name 
 
 # Import DEM of SBROI
 dem_path = os.path.join(os.getcwd(),lspatch)
